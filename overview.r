@@ -4,6 +4,7 @@ library(readxl)
 library(chorddiag)
 library(dplyr)
 library(streamgraph)
+library(bubbles)
 
 header <- dashboardHeader(title = "SAMPLE")
 
@@ -11,7 +12,8 @@ sidebar <- dashboardSidebar(
   sidebarMenu(
     menuItem("OVERVIEW", tabName = "OVERVIEW"),
     menuItem("STUDENT", tabName = "STUDENT"),
-    menuItem("STAFF", tabName = "STAFF")
+    menuItem("STAFF", tabName = "STAFF"),
+    menuItem("OVERALL", tabName = "OVERALL")
   )
 )
 
@@ -83,6 +85,29 @@ body <- dashboardBody(
                     selected = 'Gender',
                     width = '98%'),
         chorddiagOutput("staffPlot", height = 600)
+      )
+    ),
+    
+    tabItem("OVERALL",
+      fluidRow(
+        tabBox(
+          title = "Bubble Chart",
+          id = "tabset1", height = "1000px", width = 12,
+          tabPanel("Student by States", "Tab 1 content",
+                   sliderInput("animation", "Looping Animation:",
+                              min = 2014, max = 2017,
+                              value = 2014, step = 1,
+                              animate = animationOptions(interval = 1000, loop = TRUE)
+                    )     
+          ),
+          tabPanel("Student by Fields", "Tab 2 Content",
+                   sliderInput("animation", "Looping Animation:",
+                               min = 2014, max = 2017,
+                               value = 2014, step = 1,
+                               animate = animationOptions(interval = 1000, loop = TRUE)
+                   ) 
+          )
+        )
       )
     )
   )
@@ -190,6 +215,18 @@ shinyApp(
         chorddiag(position_staffMat, type = "bipartite", showTicks = F, groupnameFontsize = 14, groupnamePadding = 10, margin = 90)
       }
       
+    })
+    
+    output$overallPlot <- renderBubbles({
+      BubbleData <- read_excel("Main_Data.xlsx", sheet = "Overall")
+      state <- BubbleData$STATES
+      valueB2015 <- BubbleData$STUDENTS_BY_STATES_2015
+      valueB2016 <- BubbleData$STUDENTS_BY_STATES_2016
+      valueB2017 <- BubbleData$STUDENTS_BY_STATES_2017
+      
+      bubbles(value = valueB2015, label = state, tooltip = valueB2015,
+              color = rainbow(15, alpha=NULL)[sample(15)]
+      )
     })
   }
 )
