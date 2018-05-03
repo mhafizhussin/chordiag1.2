@@ -15,10 +15,12 @@ header <- dashboardHeader(title = "SAMPLE")
 
 sidebar <- dashboardSidebar(
   sidebarMenu(
-    menuItem("OVERVIEW", tabName = "OVERVIEW"),
-    menuItem("STUDENT", tabName = "STUDENT"),
-    menuItem("STAFF", tabName = "STAFF"),
-    menuItem("OVERALL", tabName = "OVERALL")
+    sidebarSearchForm(textId = "searchText", buttonId = "searchButton",
+                      label = "Search..."),
+    menuItem("OVERVIEW", tabName = "OVERVIEW", icon = icon("info")),
+    menuItem("STUDENT", tabName = "STUDENT", icon = icon("bar-chart-o")),
+    menuItem("STAFF", tabName = "STAFF", icon = icon("bar-chart-o")),
+    menuItem("OVERALL", tabName = "OVERALL", icon = icon("list-alt"))
   )
 )
 
@@ -27,9 +29,7 @@ body <- dashboardBody(
     tabItem("OVERVIEW",
       fluidRow(
         valueBox(15, "Public Universities", icon = icon("education", lib = "glyphicon")),
-                     
         valueBox(100 * 2, "Current Students", icon = icon("stats", lib = "glyphicon")),
-                     
         valueBox(1500,"Number Of Staff", icon = icon("user", lib = "glyphicon"), color = "fuchsia")
       ),
       
@@ -51,12 +51,12 @@ body <- dashboardBody(
     
     tabItem("STUDENT",
       fluidRow(
-        infoBox("UM", 1, icon = icon("education", lib = "glyphicon"), color = "blue"),
-        infoBox("UKM", 2, icon = icon("education", lib = "glyphicon"), color = "yellow"),
-        infoBox("USM", 3, icon = icon("education", lib = "glyphicon"), color = "green"),
-        infoBox("UTM", 4, icon = icon("education", lib = "glyphicon"), color = "black"),
-        infoBox("UPM", 5, icon = icon("education", lib = "glyphicon"), color = "lime"),
-        infoBox("TOTAL", 6, icon = icon("education", lib = "glyphicon"), color = "red")
+        infoBox("UM", 1, icon = icon("education", lib = "glyphicon"), color = "blue", fill = TRUE),
+        infoBox("UKM", 2, icon = icon("education", lib = "glyphicon"), color = "yellow", fill = TRUE),
+        infoBox("USM", 3, icon = icon("education", lib = "glyphicon"), color = "green", fill = TRUE),
+        infoBox("UTM", 4, icon = icon("education", lib = "glyphicon"), color = "black", fill = TRUE),
+        infoBox("UPM", 5, icon = icon("education", lib = "glyphicon"), color = "lime", fill = TRUE),
+        infoBox("TOTAL", 6, icon = icon("education", lib = "glyphicon"), color = "red", fill = TRUE)
       ),
       
       fluidPage(
@@ -69,7 +69,7 @@ body <- dashboardBody(
                     selected = 'Gender',
                     width = '98%'),
         
-        chorddiagOutput("distPlot", height = 600)
+        chorddiagOutput("distPlot", height = 1000)
       )
     ),
     
@@ -90,7 +90,7 @@ body <- dashboardBody(
                     choices = c("Gender","Education Qualification", "Academic Position"),
                     selected = 'Gender',
                     width = '98%'),
-        chorddiagOutput("staffPlot", height = 600)
+        chorddiagOutput("staffPlot", height = 1000, width = '98%')
       )
     ),
     
@@ -100,17 +100,17 @@ body <- dashboardBody(
           title = "Bubble Chart",
           id = "tabset1", height = "1000px", width = 12,
           tabPanel("Student by States", "Tab 1 content",
-                   sliderInput("animation1", "Looping Animation:",
+                   sliderInput("animation1", "Slide to change year:", width = '98%',
                               min = 2014, max = 2017,
                               value = 2014, step = 1,
                               animate = animationOptions(interval = 1500, loop = TRUE)),
-                   bubblesOutput("overallPlot1", height = 600)),
+                   bubblesOutput("overallPlot1", height = 600, width = '98%')),
           tabPanel("Student by Fields", "Tab 2 Content",
-                   sliderInput("animation2", "Looping Animation:",
+                   sliderInput("animation2", "Slide to change year:", width = '98%',
                                min = 2014, max = 2017,
                                value = 2014, step = 1,
                                animate = animationOptions(interval = 1500, loop = TRUE)),
-                   bubblesOutput("overallPlot2", height = 600)
+                   bubblesOutput("overallPlot2", height = 600, width = '98%')
           )
         )
       )
