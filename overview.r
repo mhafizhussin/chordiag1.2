@@ -66,20 +66,23 @@ body <- dashboardBody(
     ),
     
     tabItem("STAFF",
-            
       fluidRow(
-        radioButtons('input_data2', "Input Data",
-                     choices = c("Staff Gender", "Staff Level", "Staff"),
-                     selected = 'Staff Gender',
-                     width = '98%'
-                     )
+        infoBox("UM", 1, icon = icon("education", lib = "glyphicon"), color = "blue"),
+        infoBox("UKM", 2, icon = icon("education", lib = "glyphicon"), color = "yellow"),
+        infoBox("USM", 3, icon = icon("education", lib = "glyphicon"), color = "green"),
+        infoBox("UTM", 4, icon = icon("education", lib = "glyphicon"), color = "black"),
+        infoBox("UPM", 5, icon = icon("education", lib = "glyphicon"), color = "lime"),
+        infoBox("TOTAL", 6, icon = icon("education", lib = "glyphicon"), color = "red")
       ),
-      fluidRow(
-        box(
-          title = "Graph for Staff", height = 700, width = 12, solidHeader = TRUE,
-          status = "primary",
-          chorddiagOutput("staffPlot", height = 600)
-        )
+      fluidPage(
+        br(),
+        br(),
+        
+        selectInput('input_data2', "Input Test 2",
+                    choices = c("Gender","Education Qualification", "Academic Position"),
+                    selected = 'Gender',
+                    width = '98%'),
+        chorddiagOutput("staffPlot", height = 600)
       )
     )
   )
@@ -162,14 +165,30 @@ shinyApp(
       level_var <- c("PHD_STAFF_2015", "PHD_STAFF_2016", "PHD_STAFF_2017",
                      "MASTERS_STAFF_2015", "MASTERS_STAFF_2016", "MASTERS_STAFF_2017",
                      "BACHELOR_STAFF_2015", "BACHELOR_STAFF_2016", "BACHELOR_STAFF_2017")
+      position_var <- c("PROFESSORS_2015", "PROFESSORS_2016", "PROFESSORS_2017",
+                        "ASSOC_PROFS_2015", "ASSOC_PROFS_2016", "ASSOC_PROFS_2017",
+                        "LECTURERS_2015", "LECTURERS_2016", "LECTURERS_2017")
       
       gender_staff <- main_data2[,gender_var]
+      level_staff <- main_data2[,level_var]
+      position_staff <- main_data2[,position_var]
       
       gender_staffMat <- as.matrix(gender_staff)
+      level_staffMat <- as.matrix(level_staff)
+      position_staffMat <- as.matrix(position_staff)
       
       rownames(gender_staffMat) <- university
+      rownames(level_staffMat) <- university
+      rownames(position_staffMat) <- university
       
-      chorddiag(gender_staffMat, type = "bipartite", showTicks = F, groupnameFontsize = 14, groupnamePadding = 10, margin = 90)
+      
+      if(input$input_data2 == "Gender"){
+        chorddiag(gender_staffMat, type = "bipartite", showTicks = F, groupnameFontsize = 14, groupnamePadding = 10, margin = 90)
+      }else if(input$input_data2 == "Education Qualification"){
+        chorddiag(level_staffMat, type = "bipartite", showTicks = F, groupnameFontsize = 14, groupnamePadding = 10, margin = 90)
+      }else {
+        chorddiag(position_staffMat, type = "bipartite", showTicks = F, groupnameFontsize = 14, groupnamePadding = 10, margin = 90)
+      }
       
     })
   }
