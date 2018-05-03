@@ -6,6 +6,11 @@ library(dplyr)
 library(streamgraph)
 library(bubbles)
 
+color1 <- c("#6600FF","#0066FF","#CCFF00","#00CCFF","#FF00CC","#66FF00","#00FF66","#00FF00","#FFCC00",
+            "#CC00FF","#0000FF","#FF0000","#FF6600","#00FFCC","#FF0066")
+color2 <- c("#CC00FF","#0000FF","#FF0000","#FF6600","#00FFCC","#FF0066",
+            "#6600FF","#0066FF","#CCFF00","#00CCFF","#FF00CC","#66FF00","#00FF66","#00FF00","#FFCC00")
+
 header <- dashboardHeader(title = "SAMPLE")
 
 sidebar <- dashboardSidebar(
@@ -31,7 +36,8 @@ body <- dashboardBody(
       fluidRow(
         box(
           title = "Graph of Enrolment, Intake and Output for 2017", height = 500,width = 12, solidHeader = TRUE,
-          status = "primary", plotOutput("plot2", height = 400)
+          status = "primary",
+          plotOutput("plot2", height = 400)
         )
       ),
       
@@ -94,18 +100,17 @@ body <- dashboardBody(
           title = "Bubble Chart",
           id = "tabset1", height = "1000px", width = 12,
           tabPanel("Student by States", "Tab 1 content",
-                   sliderInput("animation", "Looping Animation:",
+                   sliderInput("animation1", "Looping Animation:",
                               min = 2014, max = 2017,
                               value = 2014, step = 1,
-                              animate = animationOptions(interval = 1000, loop = TRUE)
-                    )     
-          ),
+                              animate = animationOptions(interval = 1500, loop = TRUE)),
+                   bubblesOutput("overallPlot1", height = 600)),
           tabPanel("Student by Fields", "Tab 2 Content",
-                   sliderInput("animation", "Looping Animation:",
+                   sliderInput("animation2", "Looping Animation:",
                                min = 2014, max = 2017,
                                value = 2014, step = 1,
-                               animate = animationOptions(interval = 1000, loop = TRUE)
-                   ) 
+                               animate = animationOptions(interval = 1500, loop = TRUE)),
+                   bubblesOutput("overallPlot2", height = 600)
           )
         )
       )
@@ -217,16 +222,49 @@ shinyApp(
       
     })
     
-    output$overallPlot <- renderBubbles({
+    output$overallPlot1 <- renderBubbles({
       BubbleData <- read_excel("Main_Data.xlsx", sheet = "Overall")
       state <- BubbleData$STATES
       valueB2015 <- BubbleData$STUDENTS_BY_STATES_2015
       valueB2016 <- BubbleData$STUDENTS_BY_STATES_2016
       valueB2017 <- BubbleData$STUDENTS_BY_STATES_2017
       
-      bubbles(value = valueB2015, label = state, tooltip = valueB2015,
-              color = rainbow(15, alpha=NULL)[sample(15)]
-      )
+      if(input$animation1 == 2014) {
+        #bubbles(value = valueB2015, label = state, tooltip = valueB2015,
+         #     color = rainbow(15, alpha=NULL)[sample(15)])
+      } else if(input$animation1 == 2015) {
+        bubbles(value = valueB2015, label = state, tooltip = valueB2015,
+                color = color1)#rainbow(15, alpha = NULL)[sample(15)])
+      } else if(input$animation1 == 2016) {
+        bubbles(value = valueB2016, label = state, tooltip = valueB2016,
+                color = color1)#rainbow(15, alpha = NULL)[sample(15)])
+      } else {
+        bubbles(value = valueB2017, label = state, tooltip = valueB2017,
+                color = color1)#rainbow(15, alpha = NULL)[sample(15)])
+      }
+    })
+    
+    output$overallPlot2 <- renderBubbles({
+      BubbleData2 <- read_excel("Main_Data.xlsx", sheet = "Overall")
+      field <- BubbleData2$FIELD_OF_STUDY
+      #valueF2014 <- BubbleData2$STUDENTS_BY_FIELDS_2014
+      valueF2015 <- BubbleData2$STUDENTS_BY_FIELDS_2015
+      valueF2016 <- BubbleData2$STUDENTS_BY_FIELDS_2016
+      valueF2017 <- BubbleData2$STUDENTS_BY_FIELDS_2017
+      
+      if(input$animation2 == 2014) {
+        #bubbles(value = valueB2015, label = state, tooltip = valueB2015,
+        #     color = rainbow(15, alpha=NULL)[sample(15)])
+      } else if(input$animation2 == 2015) {
+        bubbles(value = valueF2015, label = field, tooltip = valueF2015,
+                color = color2)#rainbow(15, alpha = NULL)[sample(15)])
+      } else if(input$animation2 == 2016) {
+        bubbles(value = valueF2016, label = field, tooltip = valueF2016,
+                color = color2)#rainbow(15, alpha = NULL)[sample(15)])
+      } else {
+        bubbles(value = valueF2017, label = field, tooltip = valueF2017,
+                color = color2)#rainbow(15, alpha = NULL)[sample(15)])
+      }
     })
   }
 )
