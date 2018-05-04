@@ -6,10 +6,12 @@ library(dplyr)
 library(streamgraph)
 library(bubbles)
 
+# global constant
 color1 <- c("#6600FF","#0066FF","#CCFF00","#00CCFF","#FF00CC","#66FF00","#00FF66","#00FF00","#FFCC00",
             "#CC00FF","#0000FF","#FF0000","#FF6600","#00FFCC","#FF0066")
 color2 <- c("#CC00FF","#0000FF","#FF0000","#FF6600","#00FFCC","#FF0066",
             "#6600FF","#0066FF","#CCFF00","#00CCFF","#FF00CC","#66FF00","#00FF66","#00FF00","#FFCC00")
+university <- c("UM","USM","UKM","UPM","UTM")
 
 header <- dashboardHeader(title = "SAMPLE")
 
@@ -18,9 +20,10 @@ sidebar <- dashboardSidebar(
     sidebarSearchForm(textId = "searchText", buttonId = "searchButton",
                       label = "Search..."),
     menuItem("OVERVIEW", tabName = "OVERVIEW", icon = icon("info")),
-    menuItem("STUDENT", tabName = "STUDENT", icon = icon("bar-chart-o")),
-    menuItem("STAFF", tabName = "STAFF", icon = icon("bar-chart-o")),
-    menuItem("OVERALL", tabName = "OVERALL", icon = icon("list-alt"))
+    menuItem("STUDENT", tabName = "STUDENT", icon = icon("bar-chart-o"), badgeLabel = "Chord Diagram", badgeColor = "green"),
+    menuItem("STAFF", tabName = "STAFF", icon = icon("bar-chart-o"), badgeLabel = "Chord Diagram", badgeColor = "green"),
+    menuItem("OVERALL", tabName = "OVERALL", icon = icon("bar-chart-o"), badgeLabel = "Bubble Diagram", badgeColor = "fuchsia"),
+    menuItem("ABOUT", tabName = "ABOUT", icon = icon("info-circle", lib = "font-awesome"))
   )
 )
 
@@ -69,7 +72,7 @@ body <- dashboardBody(
                     selected = 'Gender',
                     width = '98%'),
         
-        chorddiagOutput("distPlot", height = 1000)
+        chorddiagOutput("distPlot", height = 600)
       )
     ),
     
@@ -90,7 +93,7 @@ body <- dashboardBody(
                     choices = c("Gender","Education Qualification", "Academic Position"),
                     selected = 'Gender',
                     width = '98%'),
-        chorddiagOutput("staffPlot", height = 1000, width = '98%')
+        chorddiagOutput("staffPlot", height = 600, width = '98%')
       )
     ),
     
@@ -114,7 +117,9 @@ body <- dashboardBody(
           )
         )
       )
-    )
+    ),
+    
+    tabItem("ABOUT", box(width = 12, includeMarkdown("www/about.md")))
   )
 )
 
@@ -134,8 +139,7 @@ shinyApp(
       # main_data
       main_data <- read_excel("Main_Data.xlsx")
       
-      # constant
-      university <- c("UM","USM","UKM","UPM","UTM")
+      # local constant
       gender_variables <-c("MALE_2015","MALE_2016","MALE_2017",
                            "FEMALE_2015","FEMALE_2016","FEMALE_2017")
       citizen_variables <- c("MALAYSIAN_2015","MALAYSIAN_2016","MALAYSIAN_2017",
@@ -144,14 +148,12 @@ shinyApp(
                            "BACHELOR_2015","BACHELOR_2016","BACHELOR_2017",
                            "MASTER_2015","MASTER_2016","MASTER_2017",
                            "PHD_2015","PHD_2016","PHD_2017")
-      disable_variables <- c("HEARING_DIS_2015","HEARING_DIS_2016","HEARING_DIS_2017",
-                             "SPEECH_DIS_2015","SPEECH_DIS_2016","SPEECH_DIS_2017",
-                             "LEGS_DIS_2015","LEGS_DIS_2016","LEGS_DIS_2017",
-                             "SPEECH_DIS_2015","SPEECH_DIS_2016","SPEECH_DIS_2017",
-                             "ARMS_DIS_2015","ARMS_DIS_2016","ARMS_DIS_2017",
-                             "PARALYTICS_DIS_2015","PARALYTICS_DIS_2016","PARALYTICS_DIS_2017",
-                             "VISUAL_DIS_2015","VISUAL_DIS_2016","VISUAL_DIS_2017",
-                             "OTHERS_DIS_2015","OTHERS_DIS_2016","OTHERS_DIS_2017")
+      disable_variables <- c("HEARING_15","HEARING_16","HEARING_17",
+                             "SPEECH_15","SPEECH_16","SPEECH_17",
+                             "PHYSICAL_15","PHYSICAL_16","PHYSICAL_17",
+                             "SPEECH_15","SPEECH_16","SPEECH_17",
+                             "VISUAL_15","VISUAL_16","VISUAL_17",
+                             "OTHERS_15","OTHERS_16","OTHERS_17")
       
       
       # select data
@@ -172,15 +174,15 @@ shinyApp(
       
       
       if(input$input_data =="Gender"){
-        chorddiag(gender.mat, type = "bipartite", showTicks = F, groupnameFontsize = 14, groupnamePadding = 10, margin = 90)
+        chorddiag(gender.mat, type = "bipartite", palette2 = "OrRd", showTicks = F, groupnameFontsize = 14, groupnamePadding = 10, margin = 90)
       }else if(
         input$input_data =="Nationality"){
-        chorddiag(citizen.mat, type = "bipartite", showTicks = F, groupnameFontsize = 14, groupnamePadding = 10, margin = 90)
+        chorddiag(citizen.mat, type = "bipartite", palette2 = "Greens", showTicks = F, groupnameFontsize = 14, groupnamePadding = 10, margin = 90)
       } else if(
         input$input_data =="Field of Study"){
-        chorddiag(level.mat, type = "bipartite", showTicks = F, groupnameFontsize = 14, groupnamePadding = 10, margin = 90)
+        chorddiag(level.mat, type = "bipartite", palette2 = "Blues", showTicks = F, groupnameFontsize = 14, groupnamePadding = 10, margin = 90)
       }else{
-        chorddiag(disable.mat, type = "bipartite", showTicks = F, groupnameFontsize = 14, groupnamePadding = 10, margin = 90)
+        chorddiag(disable.mat, type = "bipartite", palette2 = "Spectral", showTicks = F, groupnameFontsize = 14, groupnamePadding = 10, margin = 90)
       }
     })
     
@@ -188,8 +190,7 @@ shinyApp(
       # main_data
       main_data2 <- read_excel("Main_Data.xlsx")
       
-      # constant
-      university <- c("UM","USM","UKM","UPM","UTM")
+      # local constant
       gender_var <- c("MALE_STAFF_2015", "MALE_STAFF_2016", "MALE_STAFF_2017",
                       "FEMALE_STAFF_2015","FEMALE_STAFF_2016","FEMALE_STAFF_2017")
       level_var <- c("PHD_STAFF_2015", "PHD_STAFF_2016", "PHD_STAFF_2017",
