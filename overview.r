@@ -46,17 +46,17 @@ body <- dashboardBody(
       
       fluidRow(
         box(
-          title = "Graph of Enrolment, Intake and Output for 2017", height = 500,width = 12, solidHeader = TRUE,
+          title = "Data for Application", height = 800, width = 12, solidHeader = TRUE,
           status = "primary",
-          plotOutput("plot2", height = 400)
+          tableOutput("table")
         )
       ),
       
       fluidRow(
         box(
-          title = "Data for Application", height = 800, width = 12, solidHeader = TRUE,
+          title = "Graph of Enrolment, Intake and Output for 2017", height = 500,width = 12, solidHeader = TRUE,
           status = "primary",
-          tableOutput("table")
+          plotOutput("plot2", height = 400)
         )
       )
     ),
@@ -67,8 +67,6 @@ body <- dashboardBody(
       ),
       
       fluidPage(
-        br(),
-        br(),
         
         selectInput('input_data', "Choose one variable to view the corresponding Chord Diagram",
                     choices = c("Gender","Nationality","Level of Study", "Disabilities"),
