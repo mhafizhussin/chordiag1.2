@@ -28,6 +28,7 @@ sidebar <- dashboardSidebar(
 )
 
 body <- dashboardBody(
+  includeCSS("custom.css"),
   tabItems(
     tabItem("OVERVIEW",
       fluidRow(
@@ -53,46 +54,66 @@ body <- dashboardBody(
     ),
     
     tabItem("STUDENT",
-      fluidRow(
-        infoBox("UM", 1, icon = icon("education", lib = "glyphicon"), color = "blue", fill = TRUE),
-        infoBox("UKM", 2, icon = icon("education", lib = "glyphicon"), color = "yellow", fill = TRUE),
-        infoBox("USM", 3, icon = icon("education", lib = "glyphicon"), color = "green", fill = TRUE),
-        infoBox("UTM", 4, icon = icon("education", lib = "glyphicon"), color = "black", fill = TRUE),
-        infoBox("UPM", 5, icon = icon("education", lib = "glyphicon"), color = "lime", fill = TRUE),
-        infoBox("TOTAL", 6, icon = icon("education", lib = "glyphicon"), color = "red", fill = TRUE)
+      fixedRow(
+        column(width = 12, div(class="col-md-6" ,h2("Student by Gender, Nationality, Level of Study and Disabilities")))
       ),
+      
+      # fluidRow(
+        # infoBox("UM", 1, icon = icon("education", lib = "glyphicon"), color = "blue", fill = TRUE),
+        # infoBox("UKM", 2, icon = icon("education", lib = "glyphicon"), color = "yellow", fill = TRUE),
+        # infoBox("USM", 3, icon = icon("education", lib = "glyphicon"), color = "green", fill = TRUE),
+        # infoBox("UTM", 4, icon = icon("education", lib = "glyphicon"), color = "black", fill = TRUE),
+        # infoBox("UPM", 5, icon = icon("education", lib = "glyphicon"), color = "lime", fill = TRUE),
+        # infoBox("TOTAL", 6, icon = icon("education", lib = "glyphicon"), color = "red", fill = TRUE)
+      # ),
       
       fluidPage(
         br(),
         br(),
         
-        selectInput('input_data', "Input Test",
-                    choices = c("Gender","Nationality","Field of Study", "Disabilities"),
+        selectInput('input_data', "Choose one variable to view the corresponding Chord Diagram",
+                    choices = c("Gender","Nationality","Level of Study", "Disabilities"),
                     multiple = FALSE,
                     selected = 'Gender',
                     width = '98%'),
-        
+        fixedRow(
+          tabPanel("Student by States", "Mouseover to focus on each chord to see the information.
+                    The thickness of links between chords encodes the number of students:thicker links represent 
+                    more students.")
+          # column(width = 12, div(class="col-md-6", h3("Mouseover to focus on each chord to see the information.\n
+                                                      # The thickness of links between chords encodes the number of students:thicker links represent 
+                                                      # more students.")))
+        ),
         chorddiagOutput("distPlot", height = 600)
       )
     ),
     
     tabItem("STAFF",
-      fluidRow(
-        infoBox("UM", 1, icon = icon("education", lib = "glyphicon"), color = "blue"),
-        infoBox("UKM", 2, icon = icon("education", lib = "glyphicon"), color = "yellow"),
-        infoBox("USM", 3, icon = icon("education", lib = "glyphicon"), color = "green"),
-        infoBox("UTM", 4, icon = icon("education", lib = "glyphicon"), color = "black"),
-        infoBox("UPM", 5, icon = icon("education", lib = "glyphicon"), color = "lime"),
-        infoBox("TOTAL", 6, icon = icon("education", lib = "glyphicon"), color = "red")
+      fixedRow(
+        column(width = 12, div(class="col-md-6" ,h2("Staff by Gender, Qualification and Position")))
       ),
+      
+      # fluidRow(
+        # infoBox("UM", 1, icon = icon("education", lib = "glyphicon"), color = "blue"),
+        # infoBox("UKM", 2, icon = icon("education", lib = "glyphicon"), color = "yellow"),
+        # infoBox("USM", 3, icon = icon("education", lib = "glyphicon"), color = "green"),
+        # infoBox("UTM", 4, icon = icon("education", lib = "glyphicon"), color = "black"),
+        # infoBox("UPM", 5, icon = icon("education", lib = "glyphicon"), color = "lime"),
+        # infoBox("TOTAL", 6, icon = icon("education", lib = "glyphicon"), color = "red")
+      # ),
+      
       fluidPage(
         br(),
         br(),
         
-        selectInput('input_data2', "Input Test 2",
+        selectInput('input_data2', "Choose one variable to view the corresponding Chord Diagram",
                     choices = c("Gender","Education Qualification", "Academic Position"),
                     selected = 'Gender',
                     width = '98%'),
+        fixedRow(column(width = 12, 
+                        div(class="col-md-6", h3("Mouseover to focus on each chord to see the information.\n
+                                                  The thickness of links between chords encodes the number of staff:
+                                                  thicker links represent more staff.")))),
         chorddiagOutput("staffPlot", height = 600, width = '98%')
       )
     ),
@@ -179,7 +200,7 @@ shinyApp(
         input$input_data =="Nationality"){
         chorddiag(citizen.mat, type = "bipartite", palette2 = "Greens", showTicks = F, groupnameFontsize = 14, groupnamePadding = 10, margin = 90)
       } else if(
-        input$input_data =="Field of Study"){
+        input$input_data =="Level of Study"){
         chorddiag(level.mat, type = "bipartite", palette2 = "Blues", showTicks = F, groupnameFontsize = 14, groupnamePadding = 10, margin = 90)
       }else{
         chorddiag(disable.mat, type = "bipartite", palette2 = "Spectral", showTicks = F, groupnameFontsize = 14, groupnamePadding = 10, margin = 90)
