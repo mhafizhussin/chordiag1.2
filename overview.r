@@ -5,6 +5,9 @@ library(chorddiag)
 library(dplyr)
 library(streamgraph)
 library(bubbles)
+library(formattable)
+library(knitr)
+library(kableExtra)
 
 # global constant
 color1 <- c("#6600FF","#0066FF","#CCFF00","#00CCFF","#FF00CC","#66FF00","#00FF66","#00FF00","#FFCC00",
@@ -17,9 +20,13 @@ header <- dashboardHeader(title = "SAMPLE")
 
 sidebar <- dashboardSidebar(
   sidebarMenu(
-    sidebarSearchForm(textId = "searchText", buttonId = "searchButton",
-                      label = "Search..."),
     menuItem("OVERVIEW", tabName = "OVERVIEW", icon = icon("info")),
+    selectInput('input_table', "Select Data to Display",
+                choices = university,
+                multiple = FALSE,
+                selected = 'UM',
+                width = '98%'),
+    
     menuItem("STUDENT", tabName = "STUDENT", icon = icon("bar-chart-o"), badgeLabel = "Chord Diagram", badgeColor = "green"),
     menuItem("STAFF", tabName = "STAFF", icon = icon("bar-chart-o"), badgeLabel = "Chord Diagram", badgeColor = "green"),
     menuItem("OVERALL", tabName = "OVERALL", icon = icon("bar-chart-o"), badgeLabel = "Bubble Diagram", badgeColor = "fuchsia"),
@@ -28,13 +35,13 @@ sidebar <- dashboardSidebar(
 )
 
 body <- dashboardBody(
-  includeCSS("custom.css"),
+  
   tabItems(
     tabItem("OVERVIEW",
       fluidRow(
         valueBox(15, "Public Universities", icon = icon("education", lib = "glyphicon")),
         valueBox(100 * 2, "Current Students", icon = icon("stats", lib = "glyphicon")),
-        valueBox(1500,"Number Of Staff", icon = icon("user", lib = "glyphicon"), color = "fuchsia")
+        valueBox(1500,"Number Of Staff", icon = icon("user", lib = "glyphicon"))
       ),
       
       fluidRow(
@@ -47,8 +54,9 @@ body <- dashboardBody(
       
       fluidRow(
         box(
-          title = "Graph 2", height = 500, width = 12, solidHeader = TRUE,
-          status = "primary"
+          title = "Data for Application", height = 800, width = 12, solidHeader = TRUE,
+          status = "primary",
+          tableOutput("table")
         )
       )
     ),
@@ -57,15 +65,6 @@ body <- dashboardBody(
       fixedRow(
         column(width = 12, div(class="col-md-6" ,h2("Student by Gender, Nationality, Level of Study and Disabilities")))
       ),
-      
-      # fluidRow(
-        # infoBox("UM", 1, icon = icon("education", lib = "glyphicon"), color = "blue", fill = TRUE),
-        # infoBox("UKM", 2, icon = icon("education", lib = "glyphicon"), color = "yellow", fill = TRUE),
-        # infoBox("USM", 3, icon = icon("education", lib = "glyphicon"), color = "green", fill = TRUE),
-        # infoBox("UTM", 4, icon = icon("education", lib = "glyphicon"), color = "black", fill = TRUE),
-        # infoBox("UPM", 5, icon = icon("education", lib = "glyphicon"), color = "lime", fill = TRUE),
-        # infoBox("TOTAL", 6, icon = icon("education", lib = "glyphicon"), color = "red", fill = TRUE)
-      # ),
       
       fluidPage(
         br(),
@@ -92,15 +91,6 @@ body <- dashboardBody(
       fixedRow(
         column(width = 12, div(class="col-md-6" ,h2("Staff by Gender, Qualification and Position")))
       ),
-      
-      # fluidRow(
-        # infoBox("UM", 1, icon = icon("education", lib = "glyphicon"), color = "blue"),
-        # infoBox("UKM", 2, icon = icon("education", lib = "glyphicon"), color = "yellow"),
-        # infoBox("USM", 3, icon = icon("education", lib = "glyphicon"), color = "green"),
-        # infoBox("UTM", 4, icon = icon("education", lib = "glyphicon"), color = "black"),
-        # infoBox("UPM", 5, icon = icon("education", lib = "glyphicon"), color = "lime"),
-        # infoBox("TOTAL", 6, icon = icon("education", lib = "glyphicon"), color = "red")
-      # ),
       
       fluidPage(
         br(),
@@ -140,7 +130,7 @@ body <- dashboardBody(
       )
     ),
     
-    tabItem("ABOUT", box(width = 12, includeMarkdown("www/about.md")))
+    tabItem("ABOUT", box(width = 12, "ABOUT"))
   )
 )
 
@@ -153,6 +143,33 @@ shinyApp(
               ylim=c(0,25),
               col=c("beige","orange","lightgreen","lightblue","yellow"),
               ylab="Count of items")
+    })
+    
+    output$table <- renderTable({
+      # read from Main_data
+      
+      if (input$input_table == "UM") {
+        Um_Table <- read_excel("Main_Data.xlsx", sheet = "UM")
+        Um_Table
+        # Um_Table %>% 
+          # select(VARIABLES, `2015`,`2016`,`2017`) %>%
+          # mutate(VARIABLES = color_tile("lightblue", "lightgreen")(VARIABLES))
+          # kable("html", escape = FALSE, align = "c", caption = "UM Dataset")
+          # kable_styling(bootstrap_options = c("striped", "condensed", "bordered"), full_width = TRUE)
+        
+      } else if (input$input_table == "USM") {
+        Usm_Table <- read_excel("Main_Data.xlsx", sheet = "USM")
+        Usm_Table
+      } else if (input$input_table == "UKM") {
+        Ukm_Table <- read_excel("Main_Data.xlsx", sheet = "UKM")
+        Ukm_Table
+      } else if (input$input_table == "UPM") {
+        Upm_Table <- read_excel("Main_Data.xlsx", sheet = "UPM")
+        Upm_Table
+      } else {
+        Utm_Table <- read_excel("Main_Data.xlsx", sheet = "UTM")
+        Utm_Table
+      }
     })
     
     output$distPlot <- renderChorddiag({
