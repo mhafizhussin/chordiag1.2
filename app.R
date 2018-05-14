@@ -34,8 +34,20 @@ Staff_Qualification <- c("PHD_HOLDER", "MASTERS_HOLDER", "BACHELOR_HOLDER")
 Staff_Position <- c("PROFESSORS","ASSOC_PROFS","LECTURERS")
 choices_var <- c("Gender", "Student_Level", "Nationality", "Disability", "Staff_Qualification", "Staff_Position")
 
-main_data <- read_excel("Main_Data.xlsx")
+main_data <- read_excel("Main_Data.xlsx") # first tab
+newcol <- c('University', 'Male 15', 'Female 15', 'PhD 15', 'Master 15', 'Bachelor 15', 'Diploma 15', 'Malaysian 15', 'International 15', 
+  'Hearing 15', 'Speech 15', 'Physical 15', 'Visual 15', 'Others 15', 'Male Staff 15', 'Female Staff 15', 'PhD Staff 15', 
+  'Masters Staff 15', 'Bachelor Staff 15', 'Professors 15', 'Assoc. Profs 15', 'Lecturers 15', 'Male 16', 'Female 16', 
+  'PhD 16', 'Master 16', 'Bachelor 16', 'Diploma 16', 'Malaysian 16', 'International 16', 'Hearing 16', 'Speech 16', 
+  'Physical 16', 'Visual 16', 'Others 16', 'Male Staff 16', 'Female Staff 16', 'PhD Staff 16', 'Masters Staff 16', 
+  'Bachelor Staff 16', 'Professors 16', 'Assoc. Profs 16', 'Lecturers 16', 'Male 17', 'Female 17', 'PhD 17', 'Master 17', 
+  'Bachelor 17', 'Diploma 17', 'Malaysian 17', 'International 17', 'Hearing 17', 'Speech 17', 'Physical 17', 'Visual 17', 
+  'Others 17', 'Male Staff 17', 'Female Staff 17', 'PhD Staff 17', 'Masters Staff 17', 'Bachelor Staff 17', 'Professors 17', 
+  'Assoc. Profs 17', 'Lecturers 17')
+names(main_data) <- newcol
+
 BubbleData <- read_excel("Main_Data.xlsx", sheet = "Overall")
+
 
 header <- dashboardHeader(title = "Top 5 Universities")
 
@@ -240,17 +252,17 @@ shinyApp(
       
       
       # local constant
-      gender_variables <-c("MALE_2015","MALE_2016","MALE_2017", "FEMALE_2015","FEMALE_2016","FEMALE_2017")
+      gender_variables <-c('Male 15', 'Male 16', 'Male 17','Female 15', 'Female 16', 'Female 17')
       
-      citizen_variables <- c("MALAYSIAN_2015","MALAYSIAN_2016","MALAYSIAN_2017",
-                             "INTERNATIONAL_2015","INTERNATIONAL_2016","INTERNATIONAL_2017")
+      citizen_variables <- c('Malaysian 15','Malaysian 16','Malaysian 17',
+                             'International 15', 'International 16', 'International 17')
       
-      level_variables <- c("DIPLOMA_2015","DIPLOMA_2016","DIPLOMA_2017", "BACHELOR_2015","BACHELOR_2016","BACHELOR_2017",
-                           "MASTER_2015","MASTER_2016","MASTER_2017", "PHD_2015","PHD_2016","PHD_2017")
+      level_variables <- c('Diploma 15', 'Diploma 16', 'Diploma 17', 'Bachelor 15', 'Bachelor 16', 'Bachelor 17',
+                           'Master 15', 'Master 16', 'Master 17', 'PhD 15', 'PhD 16', 'PhD 17')
       
-      disable_variables <- c("HEARING_15","HEARING_16","HEARING_17","SPEECH_15","SPEECH_16","SPEECH_17",
-                             "PHYSICAL_15","PHYSICAL_16","PHYSICAL_17","SPEECH_15","SPEECH_16","SPEECH_17",
-                             "VISUAL_15","VISUAL_16","VISUAL_17","OTHERS_15","OTHERS_16","OTHERS_17")
+      disable_variables <- c('Hearing 15', 'Hearing 16', 'Hearing 17','Speech 15', 'Speech 16', 'Speech 17', 
+                             'Physical 15', 'Physical 16', 'Physical 17',
+                             'Visual 15', 'Visual 16', 'Visual 17','Others 15', 'Others 16', 'Others 17')
       
       
       # select data
@@ -286,16 +298,16 @@ shinyApp(
     output$staffPlot <- renderChorddiag({
       
       # local constant
-      gender_var <- c("MALE_STAFF_2015", "MALE_STAFF_2016", "MALE_STAFF_2017",
-                      "FEMALE_STAFF_2015","FEMALE_STAFF_2016","FEMALE_STAFF_2017")
+      gender_var <- c('Male Staff 15', 'Male Staff 16', 'Male Staff 17', 
+                      'Female Staff 15', 'Female Staff 16', 'Female Staff 17')
       
-      level_var <- c("PHD_STAFF_2015", "PHD_STAFF_2016", "PHD_STAFF_2017",
-                     "MASTERS_STAFF_2015", "MASTERS_STAFF_2016", "MASTERS_STAFF_2017",
-                     "BACHELOR_STAFF_2015", "BACHELOR_STAFF_2016", "BACHELOR_STAFF_2017")
+      level_var <- c('PhD Staff 15', 'PhD Staff 16', 'PhD Staff 17', 
+                     'Masters Staff 15', 'Masters Staff 16', 'Masters Staff 17', 
+                     'Bachelor Staff 15', 'Bachelor Staff 16', 'Bachelor Staff 17')
       
-      position_var <- c("PROFESSORS_2015", "PROFESSORS_2016", "PROFESSORS_2017",
-                        "ASSOC_PROFS_2015", "ASSOC_PROFS_2016", "ASSOC_PROFS_2017",
-                        "LECTURERS_2015", "LECTURERS_2016", "LECTURERS_2017")
+      position_var <- c('Professors 15', 'Professors 16', 'Professors 17', 
+                        'Assoc. Profs 15', 'Assoc. Profs 16', 'Assoc. Profs 17', 
+                        'Lecturers 15', 'Lecturers 16', 'Lecturers 17')
       
       gender_staff <- main_data[,gender_var]
       level_staff <- main_data[,level_var]
@@ -323,12 +335,14 @@ shinyApp(
     output$overallPlot1 <- renderBubbles({
       
       state <- BubbleData$STATES
+      valueB2014 <- BubbleData$STUDENTS_BY_STATES_2014
       valueB2015 <- BubbleData$STUDENTS_BY_STATES_2015
       valueB2016 <- BubbleData$STUDENTS_BY_STATES_2016
       valueB2017 <- BubbleData$STUDENTS_BY_STATES_2017
       
       if(input$animation1 == 2014) {
-        #bubbles(value = valueB2014, label = state, tooltip = valueB2014,
+        bubbles(value = valueB2014, label = state, tooltip = valueB2014,
+                color = color1)
       } else if(input$animation1 == 2015) {
         bubbles(value = valueB2015, label = state, tooltip = valueB2015,
                 color = color1)
@@ -344,13 +358,14 @@ shinyApp(
     output$overallPlot2 <- renderBubbles({
       
       field <- BubbleData$FIELD_OF_STUDY
-      #valueF2014 <- BubbleData$STUDENTS_BY_FIELDS_2014
+      valueF2014 <- BubbleData$STUDENTS_BY_FIELDS_2014
       valueF2015 <- BubbleData$STUDENTS_BY_FIELDS_2015
       valueF2016 <- BubbleData$STUDENTS_BY_FIELDS_2016
       valueF2017 <- BubbleData$STUDENTS_BY_FIELDS_2017
       
       if(input$animation2 == 2014) {
-        #bubbles(value = valueB2014, label = state, tooltip = valueB2014,
+        bubbles(value = valueF2014, label = field, tooltip = valueF2014,
+                color = color2)
       } else if(input$animation2 == 2015) {
         bubbles(value = valueF2015, label = field, tooltip = valueF2015,
                 color = color2)
