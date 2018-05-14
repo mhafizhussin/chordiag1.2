@@ -20,10 +20,10 @@ library(tidyr)
 
 
 # Global Constant
-color1 <- c("#6600FF","#0066FF","#CCFF00","#00CCFF","#FF00CC","#66FF00","#00FF66","#00FF00","#FFCC00",
-           "#CC00FF","#0000FF","#FF0000","#FF6600","#00FFCC","#FF0066")
-color2 <- c("#CC00FF","#0000FF","#FF0000","#FF6600","#00FFCC","#FF0066",
-            "#6600FF","#0066FF","#CCFF00","#00CCFF","#FF00CC","#66FF00","#00FF66","#00FF00","#FFCC00")
+color1 <- c('#f0a8a8', '#f0baa8','#f0cca8','#f0dea8', '#f0f0a8', '#def0a8',
+            '#ccf0a8', '#baf0a8', '#a8f0a8', '#a8f0ba', '#a8f0cc', '#a8f0de', '#a8f0ec', '#a8f0f0', '#a8def0')
+color2 <- c('#7ce9ce', '#7ce9e3', '#7ce9e9', '#7ccee9', '#7cb3e9', '#7c97e9',
+            '#7c7ce9', '#977ce9', '#b37ce9', '#ce7ce9', '#e97ce9', '#e97cce', '#e97cb3', '#e97c97', '#e97c7c')
 
 university <- c("UM","USM","UKM","UPM","UTM")
 Gender <- c("MALE_STUDENT","FEMALE_STUDENT","MALE_STAFF","FEMALE_STAFF")
@@ -127,7 +127,7 @@ body <- dashboardBody(
               
               box(width = 12, status = "warning", 
                   "Mouseover to focus on each chord and see the information.")
-              ),
+            ),
             fluidPage(
               chorddiagOutput("staffPlot", height = 600)
             )
@@ -157,7 +157,7 @@ body <- dashboardBody(
     ),
     
     tabItem("ABOUT", box(width = 12, "ABOUT"))
-    )
+  )
 )
 
 shinyApp(
