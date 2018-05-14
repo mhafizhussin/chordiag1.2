@@ -60,9 +60,9 @@ body <- dashboardBody(
   tabItems(
     tabItem("OVERVIEW",
             fluidRow(
-              valueBox(15, "Public Universities", icon = icon("education", lib = "glyphicon")),
-              valueBox(100 * 2, "Current Students", icon = icon("stats", lib = "glyphicon")),
-              valueBox(1500,"Number Of Staff", icon = icon("user", lib = "glyphicon"))
+              valueBox(5, width = 12,"Selected Public Universities for this Project: UM, USM, UKM, UPM & UTM", icon = icon("education", lib = "glyphicon"))
+              # valueBox(100 * 2, "Current Students", icon = icon("stats", lib = "glyphicon")),
+              # valueBox(1500,"Number Of Staff", icon = icon("user", lib = "glyphicon"))
             ),
             
             fluidRow(
