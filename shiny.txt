@@ -1,0 +1,24 @@
+Slide 4
+
+Function of bubble diagram
+
+an alternative style of visualizing time series line graph, with the area of disk represent the value conpared to the y-axis on the traditional graph
+
+(letak bubbles)
+
+The programme also automatically sort the disks in descending order, from the center outward
+
+
+
+Slide 5
+Dataset
+
+our dataset is obtained from the ministry of higher education yearly reports from 2015-2017. We collect the data of the top 5 universities in Malaysia, UM, USM, UKM, UPM, UTM.
+[https://www.mohe.gov.my/muat-turun/awam/statistik/]
+They contain data about student intakes, outputs, enrollments, disabilities, and staff
+
+(insert header/summary)
+
+Data Preprocessing
+
+Most data preprocessing are done using excel, as the size of our data is relatively small, ___ entries. Multiple years are combines together into one single file
